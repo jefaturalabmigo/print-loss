@@ -4,7 +4,7 @@ import LossList from './components/LossList';
 import SettingsPanel from './components/Settings';
 import { LineChart, Settings as SettingsIcon } from 'lucide-react';
 
-const DEFAULT_SIZES = ['10x15', '13x18', '15x21', '20x30', 'A4', 'A3', 'Otro'];
+const DEFAULT_SIZES = ['9x13', '10x15', '13x18', '15x21', '20x25', '20x30', '30x40', '30x45', '10x10', '13x13', '15x15', '20x20', '30x30', 'Otro'];
 
 function App() {
   const [losses, setLosses] = useState(() => {
