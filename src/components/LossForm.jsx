@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { PlusCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { PlusCircle, AlertCircle, Loader2, Users } from 'lucide-react';
 import { submitToGoogleSheet } from '../services/googleSheetsService';
 
-const REASONS = ['Papel atascado', 'Color incorrecto', 'Mancha de tinta', 'Error de recorte', 'Falla de archivo', 'Error de operador', 'Error ingreso de Drugstore', 'Error ingreso de MUT', 'Error ingreso de Casa Costanera', 'Error ingreso de Conquistadores', 'Error WEB', 'Otro'];
+const REASONS = ['Atasco de papel', 'Error de ingreso de orden', 'Copia manchada', 'Copia doblada', 'Otro'];
+const TEAMS = ['Equipo Análogo', 'Equipo Web'];
 const PAPER_TYPES = ['Matte', 'Brillante'];
 
 export default function LossForm({ onAddLoss, sizes, sheetUrl }) {
@@ -10,6 +11,7 @@ export default function LossForm({ onAddLoss, sizes, sheetUrl }) {
     quantity: '',
     size: '',
     paperType: 'Matte',
+    team: 'Equipo Análogo',
     reason: '',
     details: ''
   });
@@ -33,6 +35,7 @@ export default function LossForm({ onAddLoss, sizes, sheetUrl }) {
       const sheetData = {
         'ID': newLoss.id,
         'Fecha': new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' }),
+        'Equipo': newLoss.team,
         'Cantidad': newLoss.quantity,
         'Tamaño': newLoss.size,
         'Tipo de Papel': newLoss.paperType,
@@ -49,6 +52,7 @@ export default function LossForm({ onAddLoss, sizes, sheetUrl }) {
       quantity: '',
       size: '',
       paperType: 'Matte',
+      team: 'Equipo Análogo',
       reason: '',
       details: ''
     });
@@ -74,6 +78,25 @@ export default function LossForm({ onAddLoss, sizes, sheetUrl }) {
             disabled={isSubmitting}
           />
         </div>
+        <div className="form-group">
+          <label className="flex items-center gap-2"><Users size={16} /> Equipo / Origen</label>
+          <div className="flex gap-4 mt-2 flex-wrap">
+            {TEAMS.map(team => (
+              <label key={team} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="team"
+                  value={team}
+                  checked={formData.team === team}
+                  onChange={(e) => setFormData({ ...formData, team: e.target.value })}
+                  className="accent-blue-600 w-4 h-4"
+                  disabled={isSubmitting}
+                />
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{team}</span>
+              </label>
+            ))}
+          </div>
+        </div>
 
         <div className="form-group">
           <label>Tamaño</label>
@@ -93,7 +116,7 @@ export default function LossForm({ onAddLoss, sizes, sheetUrl }) {
 
         <div className="form-group">
           <label>Tipo de Papel</label>
-          <div className="flex gap-4 mt-2">
+          <div className="flex gap-4 mt-2 flex-wrap">
             {PAPER_TYPES.map(type => (
               <label key={type} className="flex items-center gap-2 cursor-pointer">
                 <input
