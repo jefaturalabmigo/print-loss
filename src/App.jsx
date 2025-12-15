@@ -43,6 +43,15 @@ function App() {
     setLosses(losses.filter(l => l.id !== id));
   };
 
+  const handleOpenSettings = () => {
+    const pin = prompt("Ingresa la contraseña para acceder a la configuración:");
+    if (pin === "7777") {
+      setIsSettingsOpen(true);
+    } else if (pin !== null) {
+      alert("Contraseña incorrecta. Acceso denegado.");
+    }
+  };
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -53,7 +62,7 @@ function App() {
         <div className="flex items-center gap-4">
           <p className="tagline hidden sm:block">Control de Mermas</p>
           <button
-            onClick={() => setIsSettingsOpen(true)}
+            onClick={handleOpenSettings}
             className="p-2 hover:bg-white/10 rounded-full transition-colors"
             title="Configuración"
           >

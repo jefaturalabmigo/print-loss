@@ -17,10 +17,17 @@ export default function SettingsPanel({
 
     const handleAddSize = (e) => {
         e.preventDefault();
-        if (newSize && !sizes.includes(newSize)) {
-            onUpdateSizes([...sizes, newSize]);
-            setNewSize('');
+        const trimmedSize = newSize.trim();
+
+        if (!trimmedSize) return;
+
+        if (sizes.includes(trimmedSize)) {
+            alert(`El tamaño "${trimmedSize}" ya existe en la lista.`);
+            return;
         }
+
+        onUpdateSizes([...sizes, trimmedSize]);
+        setNewSize('');
     };
 
     const handleDeleteSize = (sizeToDelete) => {
@@ -129,7 +136,7 @@ export default function SettingsPanel({
                             </button>
                         </form>
 
-                        <div className="bg-gray-50 dark:bg-slate-900/50 rounded-lg p-2 max-h-48 overflow-y-auto border border-gray-100 dark:border-slate-700">
+                        <div className="bg-gray-50 dark:bg-slate-900/50 rounded-lg p-2 max-h-80 overflow-y-auto border border-gray-100 dark:border-slate-700">
                             {sizes.length === 0 ? (
                                 <p className="text-center text-slate-400 text-sm py-4">No hay tamaños configurados</p>
                             ) : (
