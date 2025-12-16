@@ -79,20 +79,20 @@ export default function LossForm({ onAddLoss, sizes, sheetUrl }) {
           />
         </div>
         <div className="form-group">
-          <label className="flex items-center gap-2"><Users size={16} /> Equipo / Origen</label>
-          <div className="flex gap-4 mt-2 flex-wrap">
+          <label className="flex items-center gap-2 mb-2"><Users size={16} /> Equipo / Origen</label>
+          <div className="flex gap-6 mt-2 flex-wrap">
             {TEAMS.map(team => (
-              <label key={team} className="flex items-center gap-2 cursor-pointer">
+              <label key={team} className="flex items-center gap-4 cursor-pointer p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all border border-transparent hover:border-slate-300 dark:hover:border-slate-600">
                 <input
                   type="radio"
                   name="team"
                   value={team}
                   checked={formData.team === team}
                   onChange={(e) => setFormData({ ...formData, team: e.target.value })}
-                  className="accent-blue-600 w-4 h-4"
+                  className="accent-blue-600 w-6 h-6"
                   disabled={isSubmitting}
                 />
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{team}</span>
+                <span className="text-base font-medium text-slate-700 dark:text-slate-300">{team}</span>
               </label>
             ))}
           </div>
@@ -115,20 +115,20 @@ export default function LossForm({ onAddLoss, sizes, sheetUrl }) {
         </div>
 
         <div className="form-group">
-          <label>Tipo de Papel</label>
-          <div className="flex gap-4 mt-2 flex-wrap">
+          <label className="mb-2 block">Tipo de Papel</label>
+          <div className="flex gap-6 mt-2 flex-wrap">
             {PAPER_TYPES.map(type => (
-              <label key={type} className="flex items-center gap-2 cursor-pointer">
+              <label key={type} className="flex items-center gap-4 cursor-pointer p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all border border-transparent hover:border-slate-300 dark:hover:border-slate-600">
                 <input
                   type="radio"
                   name="paperType"
                   value={type}
                   checked={formData.paperType === type}
                   onChange={(e) => setFormData({ ...formData, paperType: e.target.value })}
-                  className="accent-blue-600 w-4 h-4"
+                  className="accent-blue-600 w-6 h-6"
                   disabled={isSubmitting}
                 />
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{type}</span>
+                <span className="text-base font-medium text-slate-700 dark:text-slate-300">{type}</span>
               </label>
             ))}
           </div>

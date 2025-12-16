@@ -59,14 +59,14 @@ function App() {
           <LineChart className="logo-icon" />
           <h1>PrintLoss</h1>
         </div>
-        <div className="flex items-center gap-4">
-          <p className="tagline hidden sm:block">Control de Mermas</p>
+        <div className="flex flex-col items-center gap-2">
+          <p className="tagline hidden sm:block">Control de pérdidas de impresión</p>
           <button
             onClick={handleOpenSettings}
-            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            className="p-2 bg-transparent hover:bg-slate-800/50 rounded-full transition-colors text-slate-500 hover:text-white border-0 shadow-none"
             title="Configuración"
           >
-            <SettingsIcon size={20} className="text-white" />
+            <SettingsIcon size={24} />
           </button>
         </div>
       </header>
