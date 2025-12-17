@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Settings, Save, Upload, Trash2, Plus, X } from 'lucide-react';
+import { Settings, Save, Upload, Trash2, Plus, X, Activity } from 'lucide-react';
+import { submitToGoogleSheet } from '../services/googleSheetsService';
 
 export default function SettingsPanel({
     isOpen,
@@ -59,46 +60,76 @@ export default function SettingsPanel({
         onUpdateSheetUrl(localUrl);
     };
 
+    const handleTestConnection = async () => {
+        if (!localUrl) {
+            alert("Primero ingresa y guarda una URL.");
+            return;
+        }
+
+        const testData = {
+            'ID': 'TEST-' + Date.now(),
+            'Fecha': new Date().toLocaleString(),
+            'Equipo': 'TEST',
+            'Cantidad': 0,
+            'Tamaño': 'TEST',
+            'Tipo de Papel': 'TEST',
+            'Razón': 'Prueba de Conexión',
+            'Detalles': 'Este es un dato de prueba para verificar la conexión.'
+        };
+
+        try {
+            alert("Enviando prueba... Si la configuración es correcta, aparecerá una fila en tu hoja en unos segundos.");
+            await submitToGoogleSheet(localUrl, testData);
+        } catch (error) {
+            alert("Error al intentar conectar: " + error.message);
+        }
+    };
+
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
-                <div className="p-4 border-b border-gray-100 dark:border-slate-700 flex justify-between items-center bg-gray-50 dark:bg-slate-900/50">
-                    <h2 className="text-xl font-bold flex items-center gap-2 text-slate-800 dark:text-white">
-                        <Settings className="w-5 h-5" /> Configuración
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Settings className="w-5 h-5 icon" /> Configuración
                     </h2>
-                    <button
-                        onClick={onClose}
-                        className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-full transition-colors"
-                    >
-                        <X className="w-5 h-5" />
+                    <button onClick={onClose} className="btn-close">
+                        <X size={20} />
                     </button>
                 </div>
 
-                <div className="p-6 overflow-y-auto space-y-8">
+                <div className="modal-body">
 
                     {/* Section: Google Sheets */}
                     <section>
-                        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Integración Google Sheets</h3>
-                        <div className="space-y-3">
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                        <h3 className="section-title">Integración Google Sheets</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            <label style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-muted)' }}>
                                 URL del Web App (Google Apps Script)
                             </label>
-                            <div className="flex gap-2">
+                            <div className="input-row">
                                 <input
                                     type="text"
                                     value={localUrl}
                                     onChange={(e) => setLocalUrl(e.target.value)}
                                     placeholder="https://script.google.com/macros/s/..."
-                                    className="flex-1 input-premium text-sm"
+                                    className="input-premium"
+                                    style={{ flex: 1, fontSize: '0.9rem' }}
                                 />
                                 <button
                                     onClick={handleSaveUrl}
-                                    className="btn-secondary whitespace-nowrap"
+                                    className="btn-secondary"
                                 >
-                                    <Save size={16} /> Guardar
+                                    <Save size={16} /> Save
+                                </button>
+                                <button
+                                    onClick={handleTestConnection}
+                                    className="btn-secondary btn-test"
+                                    title="Enviar dato de prueba"
+                                >
+                                    <Activity size={16} /> Probar
                                 </button>
                             </div>
-                            <p className="text-xs text-slate-400">
+                            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                                 Los datos se enviarán a esta URL al registrar una pérdida.
                             </p>
                         </div>
@@ -106,57 +137,58 @@ export default function SettingsPanel({
 
                     {/* Section: Paper Sizes */}
                     <section>
-                        <div className="flex justify-between items-center mb-3">
-                            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Tamaños de Papel</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                            <h3 className="section-title" style={{ margin: 0 }}>Tamaños de Papel</h3>
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium"
+                                style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
                             >
                                 <Upload size={14} /> Importar CSV
                             </button>
                             <input
                                 type="file"
                                 ref={fileInputRef}
-                                className="hidden"
+                                style={{ display: 'none' }}
                                 accept=".csv,.txt"
                                 onChange={handleFileUpload}
                             />
                         </div>
 
-                        <form onSubmit={handleAddSize} className="flex gap-2 mb-4">
+                        <form onSubmit={handleAddSize} className="input-row" style={{ marginBottom: '1rem' }}>
                             <input
                                 type="text"
                                 value={newSize}
                                 onChange={(e) => setNewSize(e.target.value)}
-                                placeholder="Nuevo tamaño (ej: 10x15)"
-                                className="flex-1 input-premium text-sm"
+                                placeholder="Nuevo tamaño..."
+                                className="input-premium"
+                                style={{ flex: 1, fontSize: '0.9rem' }}
                             />
-                            <button type="submit" className="btn-primary p-2">
+                            <button type="submit" className="btn-primary" style={{ width: 'auto', padding: '0.75rem' }}>
                                 <Plus size={20} />
                             </button>
                         </form>
 
-                        <div className="bg-gray-50 dark:bg-slate-900/50 rounded-lg p-2 max-h-80 overflow-y-auto border border-gray-100 dark:border-slate-700">
+                        <div className="tags-grid">
                             {sizes.length === 0 ? (
-                                <p className="text-center text-slate-400 text-sm py-4">No hay tamaños configurados</p>
+                                <p style={{ gridColumn: 'span 2', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', padding: '1rem' }}>
+                                    No hay tamaños configurados
+                                </p>
                             ) : (
-                                <div className="grid grid-cols-2 gap-2">
-                                    {sizes.map(size => (
-                                        <div key={size} className="flex justify-between items-center bg-white dark:bg-slate-800 p-2 rounded shadow-sm border border-gray-100 dark:border-slate-700 group">
-                                            <span className="text-sm font-medium">{size}</span>
-                                            <button
-                                                onClick={() => handleDeleteSize(size)}
-                                                className="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                                            >
-                                                <Trash2 size={14} />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
+                                sizes.map(size => (
+                                    <div key={size} className="tag-item">
+                                        <span>{size}</span>
+                                        <button
+                                            onClick={() => handleDeleteSize(size)}
+                                            className="btn-icon delete-btn"
+                                            style={{ padding: '0.25rem' }}
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
+                                ))
                             )}
                         </div>
                     </section>
-
                 </div>
             </div>
         </div>
