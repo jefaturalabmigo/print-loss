@@ -5,6 +5,7 @@ import SettingsPanel from './components/Settings';
 import { LineChart, Settings as SettingsIcon } from 'lucide-react';
 
 const DEFAULT_SIZES = ['9x13', '10x15', '13x18', '15x21', '20x25', '20x30', '30x40', '30x45', '10x10', '13x13', '15x15', '20x20', '30x30', 'Otro'];
+const DEFAULT_SHEET_URL = "https://script.google.com/macros/s/AKfycbxQxCI_zQWgVmkDmW6wEL2ojqtFGYtV9zpQ8DKGRoo0HiaJ11MIBLsynyckmJTvQgiZ/exec";
 
 function App() {
   const [losses, setLosses] = useState(() => {
@@ -18,7 +19,7 @@ function App() {
   });
 
   const [sheetUrl, setSheetUrl] = useState(() => {
-    return localStorage.getItem('sheetUrl') || '';
+    return localStorage.getItem('sheetUrl') || DEFAULT_SHEET_URL;
   });
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
