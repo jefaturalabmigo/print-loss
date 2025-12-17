@@ -150,6 +150,18 @@ export default function LossForm({ onAddLoss, sizes, sheetUrl }) {
           </div>
         </div>
 
+        <div className="form-group">
+          <label>Detalle (N° Orden / Código)</label>
+          <input
+            type="text"
+            value={formData.details}
+            onChange={(e) => setFormData({ ...formData, details: e.target.value })}
+            placeholder="Ej: Orden #12345 o Cliente X"
+            className="input-premium"
+            disabled={isSubmitting}
+          />
+        </div>
+
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
           {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <PlusCircle size={18} />}
           {isSubmitting ? ' Registrando...' : ' Registrar'}
